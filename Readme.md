@@ -6,19 +6,6 @@
 [![Embedded](https://img.shields.io/badge/Embedded-ARM%20%7C%20AVR%20%7C%20RISC--V%20%7C%20MIPS-red.svg)](https://en.wikipedia.org/wiki/Embedded_system)
 [![Questions](https://img.shields.io/badge/Questions-60%20Advanced%20with%20Answers-brightgreen.svg)]()
 
-> ** Complete Guide:** Each question includes → **Definition** | **Syntax** | **Explanation** | **Example Code** | **Interview Tips** | **Funny Diagram**
-
----
-
-##  Table of Contents
-1. [Memory & Pointers (Q1-12)](#memory--pointers)
-2. [Bit Manipulation & Embedded Tricks (Q13-22)](#bit-manipulation--embedded-tricks)
-3. [Interrupts & RTOS Concepts (Q23-32)](#interrupts--rtos-concepts)
-4. [Compiler & Optimization (Q33-42)](#compiler--optimization)
-5. [Hardware Interaction (Q43-50)](#hardware-interaction)
-6. [Debugging & Volatile (Q51-60)](#debugging--volatile)
-
----
 
 # Memory & Pointers
 
@@ -33,10 +20,10 @@ int *ptr = NULL;   // Initialize pointer to NULL
 *ptr = 42;         // DEREFERENCING NULL - UNDEFINED BEHAVIOR
 ```
 
-### 💡 Explanation
+###  Explanation
 On most embedded systems, address 0 contains the **interrupt vector table** (IVT). Writing to it corrupts critical system structures. The CPU's memory protection unit (if enabled) triggers a **Hard Fault** or **MemManage Fault**. Without MPU, it silently corrupts memory → unpredictable crashes later.
 
-### 📋 Interview Tip
+###  Interview Tip
 Always check pointers before dereferencing:
 ```c
 if (ptr != NULL) {
