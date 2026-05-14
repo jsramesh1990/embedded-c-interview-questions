@@ -1,9 +1,5 @@
-Here's **`patch-3.md`** continuing with Q43-54:
 
-```markdown
 # Embedded C Interview Questions - Patch 3
-
-**Continuation - Questions 43-54**
 
 [← Back to Main README](README.md) | [← Previous Patch](patch-2.md) | [Next Patch →](patch-4.md)
 
@@ -11,11 +7,11 @@ Here's **`patch-3.md`** continuing with Q43-54:
 
 ## Q43: Memory-Mapped Register Access
 
-### 📚 Definition
+###  Definition
 
 Memory-mapped I/O (MMIO) uses regular memory addresses to access hardware registers. The CPU reads/writes to these addresses like normal memory, but the hardware intercepts them for peripheral control.
 
-### 📝 Syntax
+###  Syntax
 
 ```c
 // Hardware register definition (from vendor header)
@@ -1109,9 +1105,3 @@ Default choice? → Push-pull
 
 ---
 
-[← Previous Patch](patch-2.md) | [Next Patch →](patch-4.md)
-
-*Questions 43-50 covered in this patch*
-```
-
-Want me to continue with **`patch-4.md`** (Q51-60: Custom assert, watchpoints, JTAG vs SWD, stack canary, backtrace, Duff's Device, memory tests, setjmp/longjmp, Therac-25 bug)?
