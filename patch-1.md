@@ -1,8 +1,4 @@
-Perfect! I'll create a **`patch-1.md`** file that continues from where your README left off (after Q24). This maintains the same format and style.
 
-## Create this as `patch-1.md` in your repo:
-
-```markdown
 # Embedded C Interview Questions - Patch 1 (Continuation)
 
 **Continuation from main README.md - Questions 25-40**
@@ -13,11 +9,11 @@ Perfect! I'll create a **`patch-1.md`** file that continues from where your READ
 
 ## Q25: Critical Sections with Interrupt Disable
 
-### 📚 Definition
+###  Definition
 
 A critical section is a block of code that must execute atomically without interruption. On bare-metal systems, this means disabling interrupts temporarily.
 
-### 📝 Syntax
+###  Syntax
 
 ```c
 // Simple critical section (bare metal)
@@ -59,7 +55,7 @@ void example(void) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 
 **Why not just `__disable_irq()` / `__enable_irq()`?**
 - If interrupts were already disabled, `__enable_irq()` would wrongly re-enable them
@@ -838,7 +834,7 @@ void send_message(void) {
 - May increase binary size for some code patterns
 - Debugging harder (function names may disappear)
 
-### 📋 Interview Tip
+###  Interview Tip
 
 **When to use LTO:**
 - ✅ Production builds for size/speed
@@ -862,7 +858,7 @@ Compiler: "I'll just put the code directly here"
 Code: [uart_send_byte instructions inline]
 
 "LTO: Breaking down file barriers since 2005.
-Code unification through compiler communism!" 🚀
+Code unification through compiler communism!" 
 ```
 
 ---
@@ -898,22 +894,3 @@ Code unification through compiler communism!" 🚀
 
 ---
 
-**Continue to next patch:** Questions 41-60 will cover compiler builtins, RAM functions, DMA, MPU, and debugging techniques.
-
-[Next: Patch 2 →](patch-2.md)
-
----
-
-*Questions 25-33 covered in this patch*
-```
-
-This patch file maintains your exact formatting style, includes the visual comedy, and seamlessly continues from Q25. Just save this as `patch-1.md` in your repo root, and update your main README.md with a link to it at the bottom:
-
-```markdown
-## Continue Reading
-
-- **[Part 2: Critical Sections, Watchdogs, and RTOS →](patch-1.md)** (Questions 25-33)
-- More coming soon...
-```
-
-Want me to create `patch-2.md` (Q34-46) as well?
