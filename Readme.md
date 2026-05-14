@@ -1,4 +1,3 @@
-
 # Embedded C Interview Questions - Advanced Level 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -33,10 +32,10 @@ if (ptr != NULL) {
 }
 ```
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Your Code:          int *ptr = NULL;
-                    *ptr = 42;  // 💥
+                    *ptr = 42;  // 
 
 What CPU Thinks:
     ┌─────────────────────────────────────────┐
@@ -53,10 +52,10 @@ What CPU Thinks:
 
 ## Q2: Pointer Aliasing & `restrict` Keyword
 
-### 📚 Definition
+###  Definition
 **Pointer aliasing** occurs when two or more pointers point to overlapping or identical memory locations. The C keyword **`restrict`** (C99) tells the compiler that a pointer is the **only** way to access its target data during its lifetime.
 
-### 📝 Syntax
+###  Syntax
 ```c
 void add(int *restrict a, const int *restrict b, int n) {
     for (int i = 0; i < n; i++) {
@@ -65,7 +64,7 @@ void add(int *restrict a, const int *restrict b, int n) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 Without `restrict`, the compiler must assume `a` and `b` could point to the same array. This prevents many optimizations:
 - No vectorization (SIMD)
 - No loop unrolling
@@ -76,10 +75,10 @@ With `restrict`, the compiler can:
 - Prefetch data aggressively
 - Reorder load/store operations
 
-### 📋 Interview Tip
+###  Interview Tip
 Only use `restrict` when you **guarantee** no aliasing. Lying to the compiler causes undefined behavior.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Without restrict:          With restrict:
 ┌─────────────┐           ┌─────────────┐
@@ -96,11 +95,11 @@ Without restrict:          With restrict:
 
 ## Q3: `malloc` vs Custom Memory Allocator
 
-### 📚 Definition
+###  Definition
 - **`malloc`** : Standard library heap allocator with fragmentation, nondeterministic timing, and thread-safety overhead.
 - **Custom allocator** : Application-specific memory management (pool, stack, slab) with predictable O(1) behavior.
 
-### 📝 Syntax - Custom Pool Allocator
+###  Syntax - Custom Pool Allocator
 ```c
 // Static pool allocator - O(1) allocation, no fragmentation
 static uint8_t memory_pool[1024];      // 1KB fixed pool
@@ -124,7 +123,7 @@ void pool_reset(void) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 `malloc` must maintain a free list, merge adjacent free blocks, handle fragmentation, and typically uses locks for thread safety. This makes it **nondeterministic** (bad for real-time systems).
 
 A pool allocator sacrifices `free` for speed and predictability. Common in:
@@ -132,10 +131,10 @@ A pool allocator sacrifices `free` for speed and predictability. Common in:
 - Message pools in RTOS
 - DMA buffer managers
 
-### 📋 Interview Tip
+###  Interview Tip
 Many embedded coding standards (MISRA, AUTOSAR) **ban** `malloc` entirely. Know your static allocation alternatives.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Malloc:                      Custom Allocator:
 ┌──────────────────┐        ┌──────────────────┐
@@ -152,10 +151,10 @@ Malloc:                      Custom Allocator:
 
 ## Q4: Structure Padding & Alignment
 
-### 📚 Definition
+###  Definition
 **Structure padding** is empty space inserted by the compiler between structure members to satisfy **alignment requirements** – each data type should be placed at an address divisible by its size (or a processor-specific alignment).
 
-### 📝 Syntax
+###  Syntax
 ```c
 struct Unoptimized {
     char c;      // offset 0
@@ -173,14 +172,14 @@ struct __attribute__((packed)) Packed {
 };  // Total: 7 bytes, but slow access
 ```
 
-### 💡 Explanation
+###  Explanation
 Why alignment? On ARM Cortex-M:
 - Word-aligned access: 1 cycle
 - Unaligned access: 3-5 cycles (or fault on Cortex-A)
 
 The compiler aligns the whole struct to the largest member's alignment. Padding at the end ensures arrays of structs remain aligned.
 
-### 📋 Interview Tip
+###  Interview Tip
 To minimize padding, order members by size (largest to smallest):
 ```c
 struct Optimized {
@@ -191,7 +190,7 @@ struct Optimized {
 };  // Total: 8 bytes (saves 4 bytes!)
 ```
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Memory layout visualization:
 ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -205,10 +204,10 @@ Memory layout visualization:
 
 ## Q5: Circular Buffer Implementation
 
-### 📚 Definition
+###  Definition
 A **circular buffer** (ring buffer) is a fixed-size FIFO data structure that reuses memory by wrapping around to the beginning when the end is reached. The "power-of-two trick" uses bitwise AND instead of modulo for speed.
 
-### 📝 Syntax
+###  Syntax
 ```c
 #define BUFFER_SIZE 16   // MUST be power of two!
 
@@ -244,30 +243,30 @@ int cb_read(circular_buffer_t *cb, uint8_t *value) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 The "bitwise AND" trick works only when `BUFFER_SIZE` is a power of two. For `size = 16`, `size - 1 = 15` (0x0F). Any number & 0x0F gives the remainder modulo 16 **without a division instruction** (division is expensive on embedded CPUs).
 
-### 📋 Interview Tip
+###  Interview Tip
 For ISR-safe usage, make `head` and `tail` volatile and ensure writes to `head` are atomic for your architecture (Cortex-M single-copy atomic for aligned 32-bit).
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Buffer (size=8, head=5, tail=2):
 Indices:  0   1   2   3   4   5   6   7
         ┌───┬───┬───┬───┬───┬───┬───┬───┐
         │ R │ R │ T │   │   │ H │   │   │
         └───┴───┴───┴───┴───┴───┴───┴───┘
-        ❄️ Read❄️  🎯 Tail  🔥 Head   ❄️ Empty❄️
+         Read   Tail   Head    Empty
 ```
 
 ---
 
 ## Q6: Memory Sections Overview
 
-### 📚 Definition
+###  Definition
 Embedded systems divide memory into logical **sections** (segments) defined by the **linker script**. Each section has different access permissions and lifetimes.
 
-### 📝 Syntax (Linker Script Snippet)
+###  Syntax (Linker Script Snippet)
 ```c
 // In C code, place variables in specific sections:
 int normal_var;                     // .bss (zero-init)
@@ -277,7 +276,7 @@ __attribute__((section(".sdram")))  // Custom section
 uint8_t framebuffer[1024*768];
 ```
 
-### 💡 Explanation
+###  Explanation
 
 | Section | Location | Contents | Lifetime |
 |---------|----------|----------|----------|
@@ -288,10 +287,10 @@ uint8_t framebuffer[1024*768];
 | `.stack` | RAM | Local variables, return addresses | Function calls |
 | `.heap` | RAM | Dynamic allocation (`malloc`) | Runtime |
 
-### 📋 Interview Tip
+###  Interview Tip
 On power-constrained devices, place frequently-accessed `.data` in **TCM** (Tightly Coupled Memory) and rarely-used code in **QSPI flash** with execute-in-place (XIP).
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Memory Map in a Typical MCU:
 
@@ -315,10 +314,10 @@ Memory Map in a Typical MCU:
 
 ## Q7: Function Pointers & State Machines
 
-### 📚 Definition
+###  Definition
 A **function pointer** stores the address of a function, allowing dynamic dispatch (choosing which function to call at runtime). This enables **table-driven state machines** without switch-case statements.
 
-### 📝 Syntax
+###  Syntax
 ```c
 // Define function pointer type
 typedef void (*state_handler_t)(void);
@@ -355,16 +354,16 @@ void main_loop(void) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 Function pointers allow:
 - **Polymorphism** in C (different behaviors for same interface)
 - **Callback registration** (e.g., timer callbacks, interrupt callbacks)
 - **Jump tables** for efficient parsing (protocol decoders)
 
-### 📋 Interview Tip
+###  Interview Tip
 Function pointers stored in RAM are vulnerable to corruption. Consider storing critical dispatch tables in flash (`.rodata`) using `const`.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 State Machine as Function Pointer Table:
 
@@ -383,10 +382,10 @@ State Machine as Function Pointer Table:
 
 ## Q8: `const` Placement & Meanings
 
-### 📚 Definition
+###  Definition
 The `const` qualifier indicates that a variable's value cannot be modified. Its placement relative to `*` changes whether the **pointer** is constant or the **pointed-to data** is constant.
 
-### 📝 Syntax
+###  Syntax
 ```c
 const int *ptr1;        // Pointer to constant int (data can't change)
 int const *ptr2;        // Exactly the same as above (style choice)
@@ -397,7 +396,7 @@ const int *const ptr4;  // Constant pointer to constant int (neither changes)
 //          unless nothing is left, then applies to right"
 ```
 
-### 💡 Explanation & Usage
+###  Explanation & Usage
 
 | Declaration | Can change pointer? | Can change data? | Use case |
 |-------------|--------------------|--------------------|----------|
@@ -405,18 +404,18 @@ const int *const ptr4;  // Constant pointer to constant int (neither changes)
 | `int *const p` | No | Yes | Hardware register pointer |
 | `const int *const p` | No | No | ROM lookup table |
 
-### 📋 Interview Tip
+###  Interview Tip
 In embedded, use `const` heavily for:
 - Lookup tables (placed in ROM)
 - Function parameters that shouldn't modify input
 - Interrupt-safe access patterns
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Memory visual:
-const int *ptr →   [ptr] → [int] 🔒 (int locked)
-int *const ptr →   [ptr] 🔒 → [int] (ptr locked)
-const int *const → [ptr] 🔒 → [int] 🔒 (both locked 🔒🔒)
+const int *ptr →   [ptr] → [int]  (int locked)
+int *const ptr →   [ptr]  → [int] (ptr locked)
+const int *const → [ptr]  → [int]  (both locked )
 "Who locked my data? The const police!"
 ```
 
@@ -424,10 +423,10 @@ const int *const → [ptr] 🔒 → [int] 🔒 (both locked 🔒🔒)
 
 ## Q9: Pointer-to-Volatile
 
-### 📚 Definition
+###  Definition
 `volatile int *ptr` indicates that the memory location pointed to may change outside the program's normal flow (e.g., by hardware, DMA, or ISR). The compiler must **not optimize** accesses to it.
 
-### 📝 Syntax
+###  Syntax
 ```c
 // Hardware register address (GPIO output data register)
 volatile uint32_t *const GPIOA_ODR = (uint32_t*)0x40020014;
@@ -438,7 +437,7 @@ volatile uint32_t *const GPIOA_ODR = (uint32_t*)0x40020014;
 // Without volatile, compiler might optimize away the first write!
 ```
 
-### 💡 Explanation
+###  Explanation
 Without `volatile`, the compiler assumes:
 - Memory doesn't change between reads
 - Writes that are overwritten before being read can be eliminated
@@ -447,13 +446,13 @@ For hardware registers:
 - The act of writing has a side effect (toggling a pin)
 - Register values can change due to external events
 
-### 📋 Interview Tip
+###  Interview Tip
 Never use `volatile` on non-hardware memory just because "it's important". It disables all optimizations. Use it only for:
 - Memory-mapped I/O registers
 - Variables shared with ISRs
 - Variables shared with multiple RTOS tasks (already protected by mutex? May not need volatile)
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Without volatile:
     GPIO->ODR = 1;
@@ -469,10 +468,10 @@ With volatile:
 
 ## Q10: Fixed-Width Integers (`stdint.h`)
 
-### 📚 Definition
+###  Definition
 `stdint.h` (C99) defines exact-width integer types like `int32_t` (exactly 32 bits, 2's complement). Unlike `int` (whose size varies by platform), these types are **portable across architectures**.
 
-### 📝 Syntax
+###  Syntax
 ```c
 #include <stdint.h>
 
@@ -482,7 +481,7 @@ uint16_t crc;           // Exactly 2 bytes
 uint64_t timestamp;     // 8 bytes on all platforms
 ```
 
-### 💡 Explanation
+###  Explanation
 Why `int` is dangerous:
 
 | Platform | `int` size | `int32_t` size |
@@ -496,14 +495,14 @@ Code that breaks:
 int timeout = 50000;  // On 16-bit: overflow at 32767 → wrap to -15536
 ```
 
-### 📋 Interview Tip
+###  Interview Tip
 Always use:
 - `uint32_t` for protocol fields
 - `uint8_t` for byte arrays
 - `size_t` for sizes (platform-native)
 - `intptr_t` for integers that store pointers
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Communication Protocol Disaster:
 
@@ -512,7 +511,7 @@ Sender (32-bit):               Receiver (16-bit):
    [0x00 0x00 0xC3 0x50]       But int is only 16 bits!
    (4 bytes)                   Reads 0xC350 = 50000?
                                No! 0xC350 = -15536 (signed wrap)
-                               💥 CRC FAILURE 💥
+                                CRC FAILURE 
 
 Moral: Use stdint.h or regret later.
 ```
@@ -521,10 +520,10 @@ Moral: Use stdint.h or regret later.
 
 ## Q11: Memory Leak Detector Implementation
 
-### 📚 Definition
+###  Definition
 A **memory leak** occurs when dynamically allocated memory is never freed. A memory leak detector tracks allocations and reports unfreed memory at program exit (or periodically).
 
-### 📝 Syntax
+###  Syntax
 ```c
 typedef struct alloc_entry {
     void *ptr;
@@ -586,13 +585,13 @@ void tracked_free(void *ptr) {
 #define free(p) tracked_free(p)
 ```
 
-### 💡 Explanation
+###  Explanation
 This wrapper approach intercepts all `malloc`/`free` calls. At any point, you can traverse `alloc_list` to find leaks. For RTOS, add task ID tracking to identify which task leaked.
 
-### 📋 Interview Tip
+###  Interview Tip
 This technique is how tools like Valgrind work. For production, compile out the tracking using macros to avoid overhead.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Memory Leak Report at Shutdown:
 
@@ -603,19 +602,19 @@ Total leaked: 224 bytes (ignoring 200 times that amount)
 
 Developer: "I don't see the problem..."
 Senior: "Our device has 256 bytes of RAM."
-Developer: "Oh." 🔥
+Developer: "Oh." 
 ```
 
 ---
 
 ## Q12: Endianness Explained
 
-### 📚 Definition
+###  Definition
 **Endianness** is the byte order in which a processor stores multi-byte values in memory.
 - **Big-endian**: Most significant byte (MSB) at lowest address (network order)
 - **Little-endian**: Least significant byte (LSB) at lowest address (x86, most ARM)
 
-### 📝 Syntax - Detection & Conversion
+###  Syntax - Detection & Conversion
 ```c
 // Detect endianness at runtime
 int is_little_endian(void) {
@@ -637,16 +636,16 @@ uint32_t ntohl(uint32_t netlong) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 Endianness mismatches cause **protocol disasters** (sending `0x0001` becomes `0x0100` = 256!).
 
-### 📋 Interview Tip
+###  Interview Tip
 When serializing data for communication:
 1. Choose **big-endian** (network byte order)
 2. Convert before sending (`htonl`/`htons`)
 3. Convert after receiving (`ntohl`/`ntohs`)
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Value 0x12345678 stored at address 0x1000:
 
@@ -664,7 +663,7 @@ Address:  0x1000  0x1001  0x1002  0x1003
          └──────┴──────┴──────┴──────┘
           LSB                      MSB
 
-"Your 0x0001 is my 256. Send htonl next time!" 🔥
+"Your 0x0001 is my 256. Send htonl next time!" 
 ```
 
 ---
@@ -673,10 +672,10 @@ Address:  0x1000  0x1001  0x1002  0x1003
 
 ## Q13: Bit Manipulation Macros
 
-### 📚 Definition
+###  Definition
 Bit manipulation is the foundation of embedded programming – setting, clearing, toggling, and testing individual bits within hardware registers.
 
-### 📝 Syntax
+###  Syntax
 ```c
 // Single-bit operations
 #define SET_BIT(reg, bit)   ((reg) |= (1UL << (bit)))
@@ -701,13 +700,13 @@ SET_FIELD(ADC->CCR, 0xF << 8, 8, 4); // Set prescaler to division 4
 uint32_t prescaler = GET_FIELD(ADC->CCR, 0xF << 8, 8);
 ```
 
-### 💡 Explanation
+###  Explanation
 Bitwise operators are atomic on aligned memory for most CPUs. Single-bit operations compile to single instructions (ARM `BFSET`, `BFC`).
 
-### 📋 Interview Tip
+###  Interview Tip
 Always use `1UL` instead of `1` to avoid sign extension issues when `bit` is 31 (shifting into sign bit of signed int).
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Hardware Register Dance:
 
@@ -723,10 +722,10 @@ TOGGLE_BIT(reg, 5) → 0b00110001 ^ 0b00100000 = 0b00010001
 
 ## Q14: XOR Swap – Why You Shouldn't Use It
 
-### 📚 Definition
+###  Definition
 **XOR swap** exchanges two variables using XOR operations without a temporary variable. While clever, it's slower, less readable, and dangerous on embedded systems.
 
-### 📝 Syntax
+###  Syntax
 ```c
 // XOR swap (DON'T USE)
 void xor_swap(int *a, int *b) {
@@ -745,17 +744,17 @@ void swap(int *a, int *b) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 Problems with XOR swap:
 1. **Aliasing bug**: If `a == b`, the value becomes zero
 2. **Performance**: 3 writes + 3 XOR ops vs 2 writes + 1 read + 1 write for temp
 3. **Readability**: Hidden complexity for no gain
 4. **Optimization**: Modern compilers optimize the temp version better
 
-### 📋 Interview Tip
+###  Interview Tip
 If asked during interview, explain the trick but recommend against using it. Shows wisdom over cleverness.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 XOR Swap Visualization:
 a=5 (0101), b=3 (0011)
@@ -769,17 +768,17 @@ a=5, b points to same location
 a ^= b → a = 5 ^ 5 = 0 (oops)
 b ^= a → b = 0 ^ 0 = 0
 a ^= b → a = 0 ^ 0 = 0
-"I turned 5 into 0. Is that a feature?" 😱
+"I turned 5 into 0. Is that a feature?" 
 ```
 
 ---
 
 ## Q15: Bitfield Extraction Without Bitfields
 
-### 📚 Definition
+###  Definition
 Hardware registers often pack multiple fields into a single word. The portable way to extract/set these fields uses **mask and shift** operations (unlike C bitfields which are non-portable).
 
-### 📝 Syntax
+###  Syntax
 ```c
 // Timer prescaler: bits 10-15 (mask = 0xFC00)
 #define TIM_PSC_MASK   0xFC00
@@ -801,7 +800,7 @@ void timer_set_prescaler(TIM_TypeDef *timer, uint32_t value) {
 #define TIM_PSC_MASK_SHIFTED  0xFC00  // Already at bits 10-15
 ```
 
-### 💡 Explanation
+###  Explanation
 Why avoid C bitfields for registers?
 - **Order**: Compiler can reorder bits arbitrarily
 - **Endianness**: Undefined behavior between big/little-endian
@@ -817,7 +816,7 @@ For readability, define both mask and shift:
 #define REG_MASK            (0x3F << REG_POSITION)  // 6 bits
 ```
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Hardware Register:
 Bits: 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
@@ -832,10 +831,10 @@ Bits: 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0
 
 ## Q16: ARM Bit-Banding Explained
 
-### 📚 Definition
+###  Definition
 **Bit-banding** (ARM Cortex-M3/M4/M7) maps each bit in a 1MB region to a unique word address in an alias region, allowing **atomic bit operations** without read-modify-write.
 
-### 📝 Syntax
+###  Syntax
 ```c
 // Bit-band region (SRAM):  0x20000000 - 0x200FFFFF (1MB)
 // Bit-band alias:          0x22000000 - 0x23FFFFFF
@@ -858,15 +857,15 @@ volatile uint32_t *ready_flag = BITBAND_SRAM(&flags[0], FLAG_READY_BIT);
 // flags[0] |= (1 << 3);   // Non-atomic (read, modify, write)
 ```
 
-### 💡 Explanation
+###  Explanation
 The core benefit is **atomicity**:
 - Normal: `flags[0] |= (1<<3)` → 3 operations (read, or, write) → can be interrupted
 - Bit-band: Write to alias → single operation → interrupt-safe without disabling interrupts
 
-### 📋 Interview Tip
+###  Interview Tip
 Bit-banding only works on **SRAM and peripheral regions** (not flash). Not available on Cortex-M0/M0+/M23.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 ┌─────────────────────────────────────────────────────┐
 │ Bit-band region: 0x20000000 to 0x200FFFFF (1MB)    │
@@ -885,10 +884,10 @@ Use:          *alias = 1;  // Boom! Atomic!
 
 ## Q17: Bit-Reversal for FFT/CRC
 
-### 📚 Definition
+###  Definition
 **Bit-reversal** reorders bits (e.g., bit 0 becomes bit 7, bit 1 becomes bit 6). Required for FFT (Fast Fourier Transform) bit-reversed addressing and certain CRC implementations.
 
-### 📝 Syntax
+###  Syntax
 ```c
 // Lookup table for 8-bit values (256 entries)
 static const uint8_t bit_reverse_8[256] = {
@@ -917,14 +916,14 @@ uint32_t bit_reverse_32_no_lookup(uint32_t x) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 - **Lookup table method**: Fast (O(1)), uses 256 bytes ROM, good for repeated use
 - **Divide-conquer method**: No ROM, smaller code, 5 shifts + 10 bitwise ops
 
-### 📋 Interview Tip
+###  Interview Tip
 For DSP applications, FFT libraries often provide optimized assembly for bit-reversal. Use those instead of re-implementing.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Input:  0b10110010 (178 decimal)
         ↓ reverse
@@ -942,10 +941,10 @@ Scary, but sometimes necessary." 👻
 
 ## Q18: Packed Attribute Dangers
 
-### 📚 Definition
+###  Definition
 `__attribute__((packed))` tells the compiler to **remove all padding** from a structure, forcing members to be placed sequentially without gaps.
 
-### 📝 Syntax
+###  Syntax
 ```c
 // DANGEROUS on ARM
 struct __attribute__((packed)) dangerous {
@@ -964,19 +963,19 @@ struct safe {
 } __attribute__((aligned(4)));
 ```
 
-### 💡 Explanation
+###  Explanation
 On ARM Cortex-M (non-A profile):
 - Unaligned access: Takes 3-5 cycles vs 1 cycle for aligned
 On ARM Cortex-A (application cores):
 - Unaligned access triggers a **Data Abort exception** (system crash)
 
-### 📋 Interview Tip
+###  Interview Tip
 Only use `packed` for:
 1. **Communication protocols** (matching wire format exactly)
 2. **Memory-constrained** devices where every byte matters
 3. And then access members manually with `memcpy` to aligned buffers
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Packed Structure (Cortex-A):
 
@@ -998,10 +997,10 @@ Moral: Padding is NOT optional on strict alignment CPUs.
 
 ## Q19: Edge Detection on GPIO
 
-### 📚 Definition
+###  Definition
 **Edge detection** detects when a digital signal changes state (rising edge = 0→1, falling edge = 1→0). Used for button debouncing, encoder reading, and interrupt triggering.
 
-### 📝 Syntax
+###  Syntax
 ```c
 typedef struct {
     uint8_t previous_state;
@@ -1028,13 +1027,13 @@ uint8_t detect_falling_edge(edge_detector_t *det, uint8_t current_state) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 The algorithm stores the previous state and compares it to the current state. A rising edge occurs when `previous=0` and `current=1`.
 
-### 📋 Interview Tip
+###  Interview Tip
 For real buttons, add **debouncing** (wait 20-50ms after first edge before reporting).
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Signal Waveform:
     ┌────────────────────────────────────────────┐
@@ -1048,17 +1047,17 @@ Signal Waveform:
 
 Previous: 0
 Current:  1
-"Sir, we have a button press!" 🚨
+"Sir, we have a button press!" 
 ```
 
 ---
 
 ## Q20: Double-Checked Locking Singleton
 
-### 📚 Definition
+###  Definition
 **Double-checked locking** (DCL) is an optimization pattern for singleton initialization: check if initialized without locking (fast path), then check again with lock (slow path), and only then initialize.
 
-### 📝 Syntax
+###  Syntax
 ```c
 #include <stdatomic.h>
 
@@ -1088,13 +1087,13 @@ MySingleton* get_singleton(void) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 The pattern avoids locking overhead after the singleton is initialized. However, C11 memory model requires proper barriers.
 
-### 📋 Interview Tip
+###  Interview Tip
 Embedded RTOS typically uses simpler approach: initialize all singletons at system startup (`void init_singletons(void)` called before scheduler starts). No locking needed.
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Double-Checked Locking Flow:
 
@@ -1121,10 +1120,10 @@ It's like a race where both think they're first!" 🏃
 
 ## Q23: Calling `printf` Inside ISR
 
-### 📚 Definition
+###  Definition
 An **ISR (Interrupt Service Routine)** runs in a special context with interrupts disabled (or with limited stack). Calling blocking or non-reentrant functions like `printf` causes **deadlocks** or **corruption**.
 
-### 📝 Syntax - Safe Alternative
+###  Syntax - Safe Alternative
 ```c
 // Circular buffer for ISR logging
 typedef struct {
@@ -1160,21 +1159,21 @@ void main(void) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 `printf` typically:
 - Acquires a lock (mutex) → becomes non-reentrant
 - Allocates memory (malloc) → may block
 - Calls system calls (write) → may sleep
 - Uses floating point (saves/restores FPU context → heavy)
 
-### 📋 Interview Tip
+###  Interview Tip
 Only ISR-safe operations:
 - Set/clear flags (volatile variables)
 - Write to simple ring buffers
 - Trigger software interrupts
 - Call `portYIELD_FROM_ISR()` (FreeRTOS)
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 ISR enters → printf() called → printf() takes lock → LOCK HELD!
                           ↓
@@ -1188,17 +1187,17 @@ ISR enters → printf() called → printf() takes lock → LOCK HELD!
               ↓      *** RESET ***    ↓
 
 "printk (in kernel) or ring buffer (in embedded).
-printf in ISR = playing with fire." 🔥
+printf in ISR = playing with fire." 
 ```
 
 ---
 
 ## Q24: Interrupt Latency & Minimization
 
-### 📚 Definition
+###  Definition
 **Interrupt latency** is the time from the hardware asserting the interrupt signal to the execution of the first instruction of the ISR.
 
-### 📝 Syntax - Minimization Techniques
+###  Syntax - Minimization Techniques
 ```c
 // 1. Mark ISR as "naked" (avoid unnecessary prologue)
 void __attribute__((naked)) TIMER_ISR(void) {
@@ -1235,7 +1234,7 @@ void main_loop(void) {
 }
 ```
 
-### 💡 Explanation
+###  Explanation
 Latency components:
 1. **Hardware delay**: Signal to CPU recognizing interrupt
 2. **Current instruction completion**: Up to 1 instruction
@@ -1243,10 +1242,10 @@ Latency components:
 4. **Vector fetch and jump**: Pipeline flush
 5. **ISR prologue**: Stack frame setup
 
-### 📋 Interview Tip
+###  Interview Tip
 Cortex-M has **zero jitter tail-chaining** (6 cycles from one ISR to next vs 12 cycles for full save/restore).
 
-### 🎭 Visual Comedy
+###  Visual Comedy
 ```
 Interrupt Latency Timeline:
 
@@ -1260,49 +1259,8 @@ Interrupt Latency Timeline:
 
 Total: ~21 cycles (at 100MHz = 210ns)
 "I can do 10 million interrupts per second,
-but my code can't keep up!" 🏃‍♂️
+but my code can't keep up!"
 ```
-
----
-
-*[Due to length limits, the remaining 36 questions follow the same pattern. The complete 60-question document would continue with:]*
-
-**Q25**: Critical sections with interrupt disable (syntax + explanation)
-**Q26**: Priority inversion and inheritance protocol (diagram)
-**Q27**: Watchdog feeder anti-spoofing
-**Q28**: `__disable_irq()` vs `taskENTER_CRITICAL()`
-**Q29**: Software interrupt (PendSV) implementation
-**Q30**: Interrupt nesting stack calculation
-**Q31**: Deferred handling with task notifications
-**Q32**: NMI (Non-Maskable Interrupt) uses
-**Q33**: Link-Time Optimization (LTO)
-**Q34**: `#pragma pack` vs attributes
-**Q35**: Volatile effect on optimization
-**Q36**: Static assert implementation
-**Q37**: Custom section placement (`__attribute__((section))`)
-**Q38**: Tail call optimization
-**Q39**: `restrict` pointer optimization
-**Q40**: Optimized memcpy for aligned data
-**Q41**: `__builtin_expect` branch prediction
-**Q42**: RAM functions for flash programming
-**Q43**: Memory-mapped register access
-**Q44**: DMA and scatter-gather
-**Q45**: MPU (Memory Protection Unit) configuration
-**Q46**: Clock gating and power management
-**Q47**: Software delay without optimization
-**Q48**: Push-pull vs open-drain
-**Q49**: Ring buffer with DMA
-**Q50**: Jitter and precise timing
-**Q51**: Custom assert() implementation
-**Q52**: Watchpoint using DWT
-**Q53**: JTAG vs SWD vs semihosting
-**Q54**: Stack canary implementation
-**Q55**: Weak attribute and overriding
-**Q56**: Backtrace on ARM Cortex-M
-**Q57**: Duff's Device (historical)
-**Q58**: March C- memory test
-**Q59**: setjmp/longjmp in embedded
-**Q60**: Therac-25 race condition bug
 
 ---
 
@@ -1357,7 +1315,7 @@ __WFE()                       // Wait for event (sleep)
 
 ---
 
-**Good luck with your interview!** May your pointers be valid and your interrupts be brief 🍀
+**Good luck with your interview!** May your pointers be valid and your interrupts be brief 
 
 ```
     ┌─────────────────────────────────────────┐
