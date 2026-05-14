@@ -1,9 +1,6 @@
-Perfect! Here's **`patch-2.md`** continuing from Q34:
 
-```markdown
 # Embedded C Interview Questions - Patch 2
 
-**Continuation - Questions 34-46**
 
 [← Back to Main README](README.md) | [← Previous Patch](patch-1.md) | [Next Patch →](patch-3.md)
 
@@ -1002,9 +999,3 @@ if(likely(main_state))        // Dominant states
 
 ---
 
-[← Previous Patch](patch-1.md) | [Next Patch →](patch-3.md)
-
-*Questions 34-42 covered in this patch*
-```
-
-Want me to continue with **`patch-3.md`** (Q43-54: DMA, MPU, JTAG, Stack Canary, etc.)?
